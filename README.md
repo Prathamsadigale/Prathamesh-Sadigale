@@ -7,7 +7,7 @@ An interactive AI Interview Coach Web Application designed to help Computer Engi
 The AI Interview Coach is a frontend-focused web application that provides a clean, responsive, and user-friendly interface for practicing interviews.
 It includes a secure login system, a dynamic dashboard, interview practice modules, performance tracking, and a curated video learning library.
 
-This project is built using HTML, CSS, and JavaScript with a strong emphasis on UI/UX design and responsiveness.
+This project is built using HTML, CSS, and JavaScript with a  emphasis on UI/UX design and responsiveness  are created and debugged on the hosting
 
 🚀 Features
 🔐 Authentication System
