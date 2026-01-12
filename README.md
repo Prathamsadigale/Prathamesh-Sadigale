@@ -122,8 +122,6 @@ Real AI interview evaluation
 
 Database for user progress
 
-Voice-based interview simulation
-
 Admin dashboard
 
 Authentication with Firebase / OAuth
