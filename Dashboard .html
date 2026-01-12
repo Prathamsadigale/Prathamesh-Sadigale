@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Coach | Computer Engineering</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #e6e9ff;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --danger: #f72585;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --light-gray: #e9ecef;
+            --medium-gray: #adb5bd;
+            --dark-gray: #495057;
+            --dark: #212529;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background-color: var(--white);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-left: 1rem;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            margin-right: 0.75rem;
+        }
+
+        .logo h1 {
+            font-size: 1.25rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            color: var(--dark-gray);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary);
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .user-profile {
+            margin-top: auto;
+            padding: 1rem;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .user-info h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.1rem;
+        }
+
+        .user-info p {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background-color: var(--light);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h2 {
+            font-size: 1.75rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--dark-gray);
+            margin-right: 1rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .profile-btn img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .profile-btn span {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Dashboard Content */
+        .welcome-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+
+        .welcome-text {
+            flex: 1;
+        }
+
+        .welcome-text h3 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-text p {
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            margin-left: 1rem;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+        }
+
+        .welcome-image {
+            width: 200px;
+            height: 150px;
+            background-image: url('https://img.freepik.com/free-vector/business-team-putting-together-jigsaw-puzzle-isolated-flat-vector-illustration-cartoon-partners-working-connection-teamwork-partnership-cooperation-concept_74855-9814.jpg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card h4 {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .stat-card p {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+
+        .stat-card .progress {
+            height: 6px;
+            background-color: var(--light-gray);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .stat-card .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+
+        .interview-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .option-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-card .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .option-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary-dark);
+        }
+
+        .option-card p {
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Enhanced Video Library Styles */
+        .video-library {
+            display: none;
+        }
+        
+        .video-library .header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .video-categories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        
+        .category-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background-color: var(--light-gray);
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        
+        .category-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .video-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .video-thumbnail {
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .video-card:hover .video-thumbnail img {
+            transform: scale(1.05);
+        }
+        
+        .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .video-card:hover .play-btn {
+            opacity: 1;
+        }
+        
+        .video-info {
+            padding: 1.25rem;
+        }
+        
+        .video-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .video-info p {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+        }
+        
+        .video-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* PDF Viewer Styles */
+        .pdf-viewer-container {
+            display: none;
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+            border: 1px solid rgba(0,0,0,0.05);
+            height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .pdf-viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .pdf-viewer-header h2 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+        
+        .close-pdf {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--medium-gray);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .close-pdf:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+        
+        .pdf-content {
+            line-height: 1.8;
+        }
+        
+        .pdf-content h1, .pdf-content h2, .pdf-content h3 {
+            margin: 1.5rem 0 1rem 0;
+            color: var(--primary-dark);
+        }
+        
+        .pdf-content h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 0.5rem;
+        }
+        
+        .pdf-content h2 {
+            font-size: 1.4rem;
+        }
+        
+        .pdf-content h3 {
+            font-size: 1.2rem;
+        }
+        
+        .pdf-content p {
+            margin-bottom: 1rem;
+        }
+        
+        .pdf-content ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        
+        .pdf-content li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .note {
+            background-color: rgba(67, 97, 238, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Interview Session Styles */
+        .interview-session {
+            display: none;
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+        }
+        
+        .interview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .interview-header h2 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .end-interview-btn {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .end-interview-btn:hover {
+            background-color: #d51a6b;
+        }
+        
+        .interview-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .ai-message {
+            background-color: var(--light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            max-width: 80%;
+            align-self: flex-start;
+        }
+        
+        .ai-message::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid var(--light);
+        }
+        
+        .user-message {
+            background-color: var(--primary-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            max-width: 80%;
+            align-self: flex-end;
+        }
+        
+        .user-message::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid var(--primary-light);
+        }
+        
+        .interview-input {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .interview-input textarea {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            resize: none;
+            min-height: 80px;
+        }
+        
+        .interview-input button {
+            align-self: flex-end;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .interview-feedback {
+            background-color: rgba(76, 201, 240, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border-radius: 0 6px 6px 0;
+            display: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            color: var(--medium-gray);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: var(--dark-gray);
+        }
+
+        .interview-types {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .interview-type {
+            padding: 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .interview-type:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .interview-type.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .interview-type i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .interview-type h4 {
+            font-size: 1rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .interview-type p {
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        /* Video Player Modal */
+        .video-modal-content {
+            max-width: 900px;
+            width: 90%;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Smooth transitions for section changes */
+        .main-content > * {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 1rem;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+            
+            .logo {
+                margin-bottom: 0;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .user-profile {
+                margin-top: 0;
+                border-top: none;
+                padding: 0;
+            }
+            
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .interview-types {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-card {
+                flex-direction: column;
+            }
+
+            .welcome-image {
+                margin-top: 1.5rem;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .user-actions {
+                margin-top: 1rem;
+            }
+            
+            .interview-options {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-message, .user-message {
+                max-width: 90%;
+            }
+
+            .interview-input {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="https://via.placeholder.com/40" alt="AI Interview Coach Logo">
+                <h1>AI Interview Coach</h1>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#dashboard" class="nav-link active">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#video-library" class="nav-link">
+                        <i class="fas fa-video"></i>
+                        <span>Video Library</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#question-bank" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span>Question Bank</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#practice" class="nav-link">
+                        <i class="fas fa-microphone"></i>
+                        <span>Practice Interview</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#progress" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Progress Tracking</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#settings" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <h3>Prathamesh Sadigale</h3>
+                    <p>Computer Engineering</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Enhanced Video Library Section -->
+            <section id="video-library" class="video-library">
+                <div class="header">
+                    <h2>Video Library</h2>
+                    <div class="user-actions">
+                        <button class="notification-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        <button class="profile-btn">
+                            <img src="https://via.placeholder.com/36" alt="Profile">
+                            <span>John</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="video-categories">
+                    <button class="category-btn active">All</button>
+                    <button class="category-btn">Behavioral</button>
+                    <button class="category-btn">Technical</button>
+                    <button class="category-btn">Coding</button>
+                    <button class="category-btn">System Design</button>
+                    <button class="category-btn">Resume Tips</button>
+                </div>
+                
+                <div class="video-grid">
+                    <!-- Computer Engineering Interview Videos -->
+                    <div class="video-card" data-video-id="BN1WwnEDWNA">
+                        <div class="video-thumbnail">
+                            <img src="https://i.ytimg.com/vi/BN1WwnEDWNA/maxresdefault.jpg" alt="Google Interview">
+                            <div class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Google Coding Interview With a Computer Engineering Student</h3>
+                            <p>Watch a real Google coding interview with a computer engineering student and learn how to approach technical questions.</p>
+                            <div class="video-meta">
+                                <span><i class="fas fa-clock"></i> 34:22</span>
+                                <span><i class="fas fa-eye"></i> 1.2M views</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card" data-video-id="uQdy914JRKQ">
+                        <div class="video-thumbnail">
+                            <img src="https://i.ytimg.com/vi/uQdy914JRKQ/maxresdefault.jpg" alt="Behavioral Interview">
+                            <div class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>How to Ace Behavioral Interviews for Computer Engineers</h3>
+                            <p>Learn the STAR method and other techniques to excel in behavioral interviews for computer engineering positions.</p>
+                            <div class="video-meta">
+                                <span><i class="fas fa-clock"></i> 12:45</span>
+                                <span><i class="fas fa-eye"></i> 850K views</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card" data-video-id="Fc1PABk7e0o">
+                        <div class="video-thumbnail">
+                            <img src="https://i.ytimg.com/vi/Fc1PABk7e0o/maxresdefault.jpg" alt="System Design">
+                            <div class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>System Design Interview for Computer Engineers (Full Guide)</h3>
+                            <p>Complete walkthrough of system design interviews with examples relevant to computer engineering roles.</p>
+                            <div class="video-meta">
+                                <span><i class="fas fa-clock"></i> 28:15</span>
+                                <span><i class="fas fa-eye"></i> 1.5M views</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card" data-video-id="bClIZj66dCE">
+                        <div class="video-thumbnail">
+                            <img src="https://i.ytimg.com/vi/bClIZj66dCE/maxresdefault.jpg" alt="Technical Interview">
+                            <div class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Technical Interview Questions for Computer Engineers</h3>
+                            <p>Top 10 technical interview questions for computer engineering students with detailed explanations.</p>
+                            <div class="video-meta">
+                                <span><i class="fas fa-clock"></i> 15:30</span>
+                                <span><i class="fas fa-eye"></i> 720K views</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card" data-video-id="I9N9Vp6t5oM">
+                        <div class="video-thumbnail">
+                            <img src="https://i.ytimg.com/vi/I9N9Vp6t5oM/maxresdefault.jpg" alt="Embedded Systems">
+                            <div class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Embedded Systems Interview Questions (Computer Engineering)</h3>
+                            <p>Common interview questions for embedded systems roles with answers from industry experts.</p>
+                            <div class="video-meta">
+                                <span><i class="fas fa-clock"></i> 22:10</span>
+                                <span><i class="fas fa-eye"></i> 450K views</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card" data-video-id="x5trGdmk4r8">
+                        <div class="video-thumbnail">
+                            <img src="https://i.ytimg.com/vi/x5trGdmk4r8/maxresdefault.jpg" alt="Resume Tips">
+                            <div class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Computer Engineering Resume Tips for Getting Interviews</h3>
+                            <p>How to craft the perfect resume for computer engineering roles that will get you more interviews.</p>
+                            <div class="video-meta">
+                                <span><i class="fas fa-clock"></i> 18:45</span>
+                                <span><i class="fas fa-eye"></i> 620K views</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Question Bank Section -->
+            <section id="question-bank" class="pdf-viewer-container">
+                <div class="pdf-viewer-header">
+                    <h2>Interview Question Bank</h2>
+                    <button class="close-pdf" id="close-pdf">&times;</button>
+                </div>
+                <div class="pdf-content">
+                    <h1>MindTools</h1>
+                    <h2>50 Common Interview Questions and Answers</h2>
+                    
+                    <p>When you've got a job interview coming up, good preparation is essential. By planning and practicing your answers, you can boost your confidence and increase your chances of getting the outcome you want.</p>
+                    
+                    <p>Interviewers want to hear about your career history, your attributes and skills, and how your competencies match those specific to the job. They also want to know whether you're a good fit for their team. The more accurately you can predict their questions, the better you can prepare the most persuasive answers.</p>
+                    
+                    <p>But how do you know in advance what you'll be asked?</p>
+                    
+                    <p>The good news is that interviews tend to follow a common pattern. And most of them use very similar questions. By understanding why interviewers follow some classic lines of inquiry, you can prepare the best possible responses, and have plenty of great examples ready to use.</p>
+                    
+                    <p>We've created this resource to help you to get ready for your next interview. It lists the 50 most-asked interview questions, along with advice about preparing great answers for all of them.</p>
+                    
+                    <h2>50 Common Interview Questions and Answers</h2>
+                    
+                    <h3>Opening Questions</h3>
+                    <ol>
+                        <li>Tell me about yourself.</li>
+                        <li>Why do you want to work for this company?</li>
+                        <li>What interests you about this particular job?</li>
+                        <li>How did you hear about the position?</li>
+                        <li>What do you know about our organization?</li>
+                    </ol>
+                    
+                    <h3>Career History Questions</h3>
+                    <ol start="6">
+                        <li>How has your career so far prepared you for this position?</li>
+                        <li>Why do you want to change roles?</li>
+                        <li>What is your greatest professional achievement?</li>
+                        <li>Tell me about your worst boss.</li>
+                        <li>Describe a conflict you faced at work – and how you dealt with it.</li>
+                        <li>How good are you in a crisis?</li>
+                        <li>When have you demonstrated leadership skills?</li>
+                        <li>Describe a time when you showed initiative.</li>
+                        <li>When have you been innovative at work?</li>
+                    </ol>
+                    
+                    <h3>Skills/Attributes Questions</h3>
+                    <ol start="15">
+                        <li>Why should we hire you?</li>
+                        <li>What are your greatest strengths?</li>
+                        <li>What makes you unique?</li>
+                    </ol>
+                    
+                    <h3>Role-Specific Questions</h3>
+                    <ol start="18">
+                        <li>What are you hoping for from this role?</li>
+                        <li>What would your first 30/60/90 days here look like?</li>
+                        <li>What could you help us to do differently or better?</li>
+                        <li>What would your salary requirements be?</li>
+                    </ol>
+                    
+                    <h3>Self-Analysis Questions</h3>
+                    <ol start="22">
+                        <li>When have you failed?</li>
+                        <li>Tell me about a time you made a mistake.</li>
+                        <li>What do you do if you disagree with someone's decision?</li>
+                        <li>Describe a time when you faced an ethical dilemma.</li>
+                        <li>What do you consider to be your weaknesses?</li>
+                        <li>What sort of criticism do you most often receive?</li>
+                    </ol>
+                    
+                    <h3>Work-Style Questions</h3>
+                    <ol start="28">
+                        <li>What sorts of things annoy you at work?</li>
+                        <li>How do you tackle difficulties when they arise?</li>
+                        <li>What type of work environment do you prefer?</li>
+                        <li>What's your management style?</li>
+                        <li>If I asked your boss or co-workers about you, what would they say?</li>
+                        <li>How do you deal with pressure?</li>
+                        <li>How do you prioritize your work?</li>
+                        <li>How do you like to be managed?</li>
+                    </ol>
+                    
+                    <h3>Goal-Based Questions</h3>
+                    <ol start="36">
+                        <li>Where do you see yourself in five years?</li>
+                        <li>What's your dream job?</li>
+                        <li>What motivates you?</li>
+                    </ol>
+                    
+                    <h3>Personal Questions</h3>
+                    <ol start="39">
+                        <li>What do you like to do outside of work?</li>
+                        <li>How do you achieve a good work-life balance?</li>
+                        <li>Are you willing to relocate?</li>
+                    </ol>
+                    
+                    <h3>Quirky Questions</h3>
+                    <ol start="42">
+                        <li>How many tennis balls can you fit into a limousine? / How many pennies would be as high as the Empire State building? / How many lightbulbs are on right now in China?</li>
+                        <li>If you were an animal, which one would you want to be?</li>
+                        <li>If you were a superhero, what would be your superpower?</li>
+                        <li>Which five people would you invite to your dream dinner party?</li>
+                        <li>Sell me this pen.</li>
+                    </ol>
+                    
+                    <h3>Closing Questions</h3>
+                    <ol start="47">
+                        <li>Is there anything else you'd like us to know?</li>
+                        <li>What other companies are you interviewing with?</li>
+                        <li>When could you start?</li>
+                        <li>Do you have any questions for us?</li>
+                    </ol>
+                    
+                    <div class="note">
+                        <p>This e-book is published by:</p>
+                        <p>Emerald Works Ltd.<br>
+                        Level 1, 50 Frederick Street,<br>
+                        Edinburgh EH2 1EX, U.K.</p>
+                        <p>Copyright © Emerald Works 2020.<br>
+                        All rights reserved.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interview Session Section -->
+            <section id="interview-session" class="interview-session">
+                <div class="interview-header">
+                    <h2 id="session-title">Practice Interview Session</h2>
+                    <button class="end-interview-btn" id="end-interview-btn">End Session</button>
+                </div>
+                
+                <div class="interview-content" id="interview-content">
+                    <div class="ai-message">
+                        <p>Welcome to your practice interview session! I'll be asking you questions based on the topic you selected. Take your time to think about each question before answering. Ready to begin?</p>
+                    </div>
+                </div>
+                
+                <div class="interview-feedback" id="interview-feedback">
+                    <h4>Feedback:</h4>
+                    <p id="feedback-text"></p>
+                </div>
+                
+                <div class="interview-input">
+                    <textarea id="user-response" placeholder="Type your answer here..."></textarea>
+                    <button class="btn btn-primary" id="submit-response">Submit</button>
+                </div>
+            </section>
+
+            <!-- Dashboard Content -->
+            <div id="dashboard-content">
+                <div class="header">
+                    <h2>Dashboard</h2>
+                    <div class="user-actions">
+                        <button class="notification-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        <button class="profile-btn">
+                            <img src="https://via.placeholder.com/36" alt="Profile">
+                            <span>John</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="welcome-card">
+                    <div class="welcome-text">
+                        <h3>Welcome back, John!</h3>
+                        <p>Ready to ace your next interview? Practice with our AI coach, explore common questions, and track your progress.</p>
+                        <div class="btn-group">
+                            <button class="btn btn-primary" id="start-interview-btn">Start Practice Interview</button>
+                            <button class="btn btn-outline">View Progress</button>
+                        </div>
+                    </div>
+                    <div class="welcome-image"></div>
+                </div>
+                
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <h4>Practice Sessions</h4>
+                        <p>12</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h4>Confidence Score</h4>
+                        <p>82%</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 82%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h4>Questions Mastered</h4>
+                        <p>47/100</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 47%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h4>Days Until Next Interview</h4>
+                        <p>14</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 30%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 style="margin-bottom: 1.5rem;">Practice Options</h2>
+                
+                <div class="interview-options">
+                    <div class="option-card" data-type="behavioral">
+                        <div class="icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Behavioral Interview</h3>
+                        <p>Practice answering common behavioral questions using the STAR method.</p>
+                        <button class="btn btn-primary">Start Practice</button>
+                    </div>
+                    
+                    <div class="option-card" data-type="technical">
+                        <div class="icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Technical Interview</h3>
+                        <p>Prepare for coding challenges and system design questions.</p>
+                        <button class="btn btn-primary">Start Practice</button>
+                    </div>
+                    
+                    <div class="option-card" data-type="mock">
+                        <div class="icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Mock Interview</h3>
+                        <p>Full simulation of a real interview with mixed question types.</p>
+                        <button class="btn btn-primary">Start Practice</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Interview Options Modal -->
+    <div class="modal" id="interview-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            
+            <div class="modal-header">
+                <h3>Start Practice Interview</h3>
+                <p>Select the type of interview you want to practice and customize your session.</p>
+            </div>
+            
+            <div class="interview-types">
+                <div class="interview-type" data-type="behavioral">
+                    <i class="fas fa-comments"></i>
+                    <h4>Behavioral</h4>
+                    <p>Focus on soft skills and past experiences</p>
+                </div>
+                
+                <div class="interview-type" data-type="technical">
+                    <i class="fas fa-code"></i>
+                    <h4>Technical</h4>
+                    <p>Coding challenges and problem solving</p>
+                </div>
+                
+                <div class="interview-type" data-type="system-design">
+                    <i class="fas fa-project-diagram"></i>
+                    <h4>System Design</h4>
+                    <p>Architecture and scalability questions</p>
+                </div>
+                
+                <div class="interview-type" data-type="mock">
+                    <i class="fas fa-users"></i>
+                    <h4>Mock Interview</h4>
+                    <p>Full simulation with mixed questions</p>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="interview-duration">Interview Duration</label>
+                <select id="interview-duration">
+                    <option value="15">15 minutes</option>
+                    <option value="30" selected>30 minutes</option>
+                    <option value="45">45 minutes</option>
+                    <option value="60">60 minutes</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="difficulty">Difficulty Level</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                    <option value="expert">Expert</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="focus-areas">Focus Areas (optional)</label>
+                <textarea id="focus-areas" placeholder="Enter specific topics or skills you want to focus on..."></textarea>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-interview-btn">Cancel</button>
+                <button class="btn btn-primary" id="confirm-interview-btn">Start Interview</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div class="modal" id="video-modal">
+        <div class="modal-content video-modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="video-container" id="video-container">
+                <!-- YouTube iframe will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const navLinks = document.querySelectorAll('.nav-link');
+        const videoLibrary = document.getElementById('video-library');
+        const questionBankSection = document.getElementById('question-bank');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const interviewSession = document.getElementById('interview-session');
+        const closePdfBtn = document.getElementById('close-pdf');
+        const startInterviewBtn = document.getElementById('start-interview-btn');
+        const interviewModal = document.getElementById('interview-modal');
+        const closeModalBtn = document.querySelector('.close-modal');
+        const cancelInterviewBtn = document.getElementById('cancel-interview-btn');
+        const confirmInterviewBtn = document.getElementById('confirm-interview-btn');
+        const interviewTypes = document.querySelectorAll('.interview-type');
+        const optionCards = document.querySelectorAll('.option-card');
+        const endInterviewBtn = document.getElementById('end-interview-btn');
+        const submitResponseBtn = document.getElementById('submit-response');
+        const userResponse = document.getElementById('user-response');
+        const interviewContent = document.getElementById('interview-content');
+        const feedbackSection = document.getElementById('interview-feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const sessionTitle = document.getElementById('session-title');
+        const videoModal = document.getElementById('video-modal');
+        const videoContainer = document.getElementById('video-container');
+        const videoCards = document.querySelectorAll('.video-card');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+
+        // Interview questions database
+        const questionsDatabase = {
+            behavioral: [
+                "Tell me about a time you faced a difficult challenge in a team project and how you handled it.",
+                "Describe a situation where you had to work with someone difficult. How did you manage the relationship?",
+                "Give an example of when you showed leadership skills in an academic or professional setting.",
+                "Tell me about a time you failed at something. What did you learn from the experience?",
+                "Describe a situation where you had to make a decision with incomplete information."
+            ],
+            technical: [
+                "Explain the difference between a microcontroller and a microprocessor.",
+                "How would you design a traffic light controller for a busy intersection?",
+                "Explain the concept of pipelining in computer architecture.",
+                "What are the key differences between TCP and UDP protocols?",
+                "How would you optimize a database query that's running slowly?"
+            ],
+            "system-design": [
+                "Design a URL shortening service like bit.ly. What components would you need?",
+                "How would you design a scalable chat application like WhatsApp?",
+                "Design an elevator control system for a 50-story building.",
+                "How would you architect a recommendation system for an e-commerce platform?",
+                "Design a parking lot management system that can handle thousands of cars."
+            ],
+            mock: [
+                "Tell me about yourself and why you're interested in this position.",
+                "Explain a complex technical concept to a non-technical person.",
+                "How would you handle a situation where your manager gives you an unrealistic deadline?",
+                "What would you do in your first 30 days at this company?",
+                "Do you have any questions for us?"
+            ]
+        };
+
+        // Current interview state
+        let currentInterview = {
+            type: null,
+            duration: null,
+            difficulty: null,
+            focusAreas: null,
+            currentQuestionIndex: 0,
+            questions: []
+        };
+
+        // Show Dashboard Content
+        function showDashboard() {
+            videoLibrary.style.display = 'none';
+            questionBankSection.style.display = 'none';
+            interviewSession.style.display = 'none';
+            dashboardContent.style.display = 'block';
+        }
+
+        // Show Video Library
+        function showVideoLibrary() {
+            videoLibrary.style.display = 'block';
+            questionBankSection.style.display = 'none';
+            interviewSession.style.display = 'none';
+            dashboardContent.style.display = 'none';
+        }
+
+        // Show Question Bank
+        function showQuestionBank() {
+            videoLibrary.style.display = 'none';
+            dashboardContent.style.display = 'none';
+            interviewSession.style.display = 'none';
+            questionBankSection.style.display = 'block';
+        }
+
+        // Show Interview Session
+        function showInterviewSession() {
+            videoLibrary.style.display = 'none';
+            dashboardContent.style.display = 'none';
+            questionBankSection.style.display = 'none';
+            interviewSession.style.display = 'block';
+        }
+
+        // Close Question Bank
+        function closeQuestionBank() {
+            questionBankSection.style.display = 'none';
+            showDashboard();
+        }
+
+        // Open Interview Modal
+        function openInterviewModal() {
+            interviewModal.style.display = 'flex';
+        }
+
+        // Close Interview Modal
+        function closeInterviewModal() {
+            interviewModal.style.display = 'none';
+        }
+
+        // Select Interview Type
+        function selectInterviewType(e) {
+            interviewTypes.forEach(type => type.classList.remove('selected'));
+            e.currentTarget.classList.add('selected');
+        }
+
+        // Start Interview Session
+        function startInterview() {
+            const selectedType = document.querySelector('.interview-type.selected');
+            if (!selectedType) return;
+            
+            currentInterview.type = selectedType.getAttribute('data-type');
+            currentInterview.duration = document.getElementById('interview-duration').value;
+            currentInterview.difficulty = document.getElementById('difficulty').value;
+            currentInterview.focusAreas = document.getElementById('focus-areas').value;
+            currentInterview.currentQuestionIndex = 0;
+            
+            // Select questions based on type and difficulty
+            currentInterview.questions = selectQuestions(
+                currentInterview.type, 
+                currentInterview.difficulty, 
+                currentInterview.focusAreas
+            );
+            
+            if (currentInterview.questions.length === 0) {
+                alert('No questions found for the selected criteria.');
+                return;
+            }
+            
+            // Update UI
+            sessionTitle.textContent = `${currentInterview.type.charAt(0).toUpperCase() + currentInterview.type.slice(1)} Interview Session`;
+            interviewContent.innerHTML = `
+                <div class="ai-message">
+                    <p>Welcome to your ${currentInterview.type} interview practice session! I'll be asking you ${currentInterview.questions.length} questions. Take your time to think about each question before answering. Ready to begin?</p>
+                </div>
+            `;
+            
+            closeInterviewModal();
+            showInterviewSession();
+            userResponse.value = '';
+            feedbackSection.style.display = 'none';
+            
+            // Start with first question after a delay
+            setTimeout(askNextQuestion, 1500);
+        }
+
+        // Select questions based on criteria
+        function selectQuestions(type, difficulty, focusAreas) {
+            // In a real app, this would be more sophisticated
+            // For demo, we'll just return some questions
+            let questions = [...questionsDatabase[type]];
+            
+            // Filter by difficulty (simplified for demo)
+            if (difficulty === 'easy') {
+                questions = questions.slice(0, 2);
+            } else if (difficulty === 'hard' || difficulty === 'expert') {
+                questions = questions.concat(questions.slice(0, 2)); // Add some duplicates as "harder" questions
+            }
+            
+            return questions;
+        }
+
+        // Ask the next question in the interview
+        function askNextQuestion() {
+            if (currentInterview.currentQuestionIndex >= currentInterview.questions.length) {
+                // Interview complete
+                interviewContent.innerHTML += `
+                    <div class="ai-message">
+                        <p>Great job! You've completed all the questions in this practice session. Would you like to review your answers or try another type of interview?</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const question = currentInterview.questions[currentInterview.currentQuestionIndex];
+            interviewContent.innerHTML += `
+                <div class="ai-message">
+                    <p><strong>Question ${currentInterview.currentQuestionIndex + 1}:</strong> ${question}</p>
+                </div>
+            `;
+            
+            // Scroll to bottom
+            interviewContent.scrollTop = interviewContent.scrollHeight;
+        }
+
+        // Submit user response
+        function submitResponse() {
+            const response = userResponse.value.trim();
+            if (!response) return;
+            
+            // Add user response to chat
+            interviewContent.innerHTML += `
+                <div class="user-message">
+                    <p>${response}</p>
+                </div>
+            `;
+            
+            // Provide feedback (simulated in this demo)
+            const feedback = generateFeedback(response);
+            feedbackText.textContent = feedback;
+            feedbackSection.style.display = 'block';
+            
+            // Clear input
+            userResponse.value = '';
+            
+            // Move to next question after a delay
+            currentInterview.currentQuestionIndex++;
+            setTimeout(askNextQuestion, 2000);
+            
+            // Scroll to bottom
+            interviewContent.scrollTop = interviewContent.scrollHeight;
+        }
+
+        // Generate feedback (simulated)
+        function generateFeedback(response) {
+            const feedbacks = [
+                "Good start! Try to structure your answer more clearly using the STAR method (Situation, Task, Action, Result).",
+                "Nice answer! You might want to include more specific details about your role in the situation.",
+                "Good response! Consider adding quantifiable results to make your answer more impactful.",
+                "You're on the right track! Try to connect your answer more directly to the job requirements.",
+                "Well done! Your answer shows good technical knowledge. Maybe add an example from your experience."
+            ];
+            return feedbacks[Math.floor(Math.random() * feedbacks.length)];
+        }
+
+        // End interview session
+        function endInterview() {
+            if (confirm('Are you sure you want to end this interview session?')) {
+                showDashboard();
+            }
+        }
+
+        // Play video when card is clicked
+        function playVideo(e) {
+            // Don't play if user clicked on a button inside the card
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+            
+            const videoId = this.getAttribute('data-video-id');
+            videoContainer.innerHTML = `
+                <iframe width="100%" height="500" src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+            `;
+            videoModal.style.display = 'flex';
+        }
+
+        // Close video modal
+        function closeVideoModal() {
+            videoModal.style.display = 'none';
+            videoContainer.innerHTML = ''; // Remove iframe when closing
+        }
+
+        // Filter videos by category
+        function filterVideos() {
+            categoryBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // In a real app, you would filter videos here
+            // For demo, we'll just animate the grid
+            const videoGrid = document.querySelector('.video-grid');
+            videoGrid.style.opacity = '0.5';
+            setTimeout(() => {
+                videoGrid.style.opacity = '1';
+            }, 300);
+        }
+
+        // Event Listeners
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                navLinks.forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Show the appropriate section
+                if (this.getAttribute('href') === '#video-library') {
+                    showVideoLibrary();
+                } else if (this.getAttribute('href') === '#question-bank') {
+                    showQuestionBank();
+                } else if (this.getAttribute('href') === '#practice') {
+                    openInterviewModal();
+                } else {
+                    showDashboard();
+                }
+            });
+        });
+
+        closePdfBtn.addEventListener('click', closeQuestionBank);
+        startInterviewBtn.addEventListener('click', openInterviewModal);
+        closeModalBtn.addEventListener('click', closeInterviewModal);
+        cancelInterviewBtn.addEventListener('click', closeInterviewModal);
+        confirmInterviewBtn.addEventListener('click', startInterview);
+        endInterviewBtn.addEventListener('click', endInterview);
+        submitResponseBtn.addEventListener('click', submitResponse);
+        
+        // Allow Enter key to submit response (but Shift+Enter for new line)
+        userResponse.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitResponse();
+            }
+        });
+
+        interviewTypes.forEach(type => {
+            type.addEventListener('click', selectInterviewType);
+        });
+
+        optionCards.forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                    const type = this.getAttribute('data-type');
+                    openInterviewModal();
+                    
+                    // Select the corresponding interview type in modal
+                    interviewTypes.forEach(typeEl => {
+                        typeEl.classList.remove('selected');
+                        if (typeEl.getAttribute('data-type') === type) {
+                            typeEl.classList.add('selected');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Video library event listeners
+        videoCards.forEach(card => {
+            card.addEventListener('click', playVideo);
+        });
+        
+        document.querySelector('#video-modal .close-modal').addEventListener('click', closeVideoModal);
+        
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', filterVideos);
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === interviewModal) {
+                closeInterviewModal();
+            }
+            if (e.target === videoModal) {
+                closeVideoModal();
+            }
+        });
+
+        // Initialize dashboard
+        showDashboard();
+    </script>
+</body>
+</html>

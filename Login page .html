@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Coach | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --secondary: #10B981;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --gray: #6B7280;
+            --danger: #EF4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        .graphics-container {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .graphics-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+            opacity: 0.5;
+        }
+        
+        .graphics-content {
+            z-index: 1;
+            width: 80%;
+            max-width: 600px;
+        }
+        
+        .app-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .app-logo img {
+            height: 40px;
+            margin-right: 12px;
+        }
+        
+        .app-logo h1 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .stats-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stats-title {
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-title {
+            color: var(--dark);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .auth-container {
+            width: 400px;
+            padding: 3rem 2rem;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -4px 0 16px rgba(0, 0, 0, 0.05);
+        }
+        
+        .auth-header {
+            margin-bottom: 2rem;
+        }
+        
+        .auth-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-subtitle {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        
+        .auth-tab {
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+            color: var(--gray);
+            cursor: pointer;
+            position: relative;
+            font-size: 0.875rem;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary);
+        }
+        
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            padding: 0.75rem 1rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .otp-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .otp-input {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 1rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .otp-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .btn {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .btn-google {
+            background: white;
+            color: var(--dark);
+            border: 1px solid #E5E7EB;
+        }
+        
+        .btn-google:hover {
+            background: #F9FAFB;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            color: var(--gray);
+            font-size: 0.75rem;
+        }
+        
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #E5E7EB;
+        }
+        
+        .auth-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+        
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .graphics-container {
+                display: none;
+            }
+            
+            .auth-container {
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto;
+                padding: 2rem 1rem;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Graphics Section -->
+    <div class="graphics-container">
+        <div class="graphics-overlay"></div>
+        <div class="graphics-content">
+            <div class="app-logo">
+                <img src="https://via.placeholder.com/40" alt="AI Interview Coach">
+                <h1>AI Interview Coach</h1>
+            </div>
+            
+            <div class="stats-container">
+                <h3 class="stats-title">Real-time Platform Stats</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="active-users">12,458</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="interviews-today">3,842</div>
+                        <div class="stat-label">Interviews Today</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="success-rate">92%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3 class="chart-title">Interview Performance Trends</h3>
+                <canvas id="performanceChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Auth Section -->
+    <div class="auth-container">
+        <div class="auth-header">
+            <h2 class="auth-title">Welcome to AI Interview Coach</h2>
+            <p class="auth-subtitle">Sign in or create an account to start practicing</p>
+        </div>
+        
+        <div class="auth-tabs">
+            <div class="auth-tab active" id="signin-tab">Sign In</div>
+            <div class="auth-tab" id="signup-tab">Sign Up</div>
+        </div>
+        
+        <!-- Sign In Form -->
+        <form class="auth-form" id="signin-form">
+            <div class="form-group">
+                <label for="signin-email" class="form-label">Email Address</label>
+                <input type="email" id="signin-email" class="form-input" placeholder="Enter your email" required>
+            </div>
+            
+            <button type="button" class="btn btn-primary" id="request-signin-otp">Request OTP</button>
+            
+            <div class="form-group hidden" id="signin-otp-group">
+                <label for="signin-otp" class="form-label">Enter OTP</label>
+                <div class="otp-container">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary hidden" id="signin-submit">Sign In</button>
+            
+            <div class="divider">or</div>
+            
+            <button type="button" class="btn btn-google">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.5781 9.20578C17.5781 8.56641 17.5229 7.95234 17.4209 7.36328H9.14062V10.845H13.9219C13.7594 11.97 13.1285 12.9234 12.1148 13.5595V15.8195H14.8922C16.4906 14.3523 17.5781 12.0133 17.5781 9.20578Z" fill="#4285F4"/>
+                    <path d="M9.14062 18C11.5031 18 13.5047 17.1945 14.8922 15.8195L12.1148 13.5595C11.3297 14.0995 10.3078 14.4244 9.14062 14.4244C6.83906 14.4244 4.87852 12.8452 4.14023 10.71H1.26562V13.0418C2.63203 15.7786 5.65312 17.9972 9.14062 18Z" fill="#34A853"/>
+                    <path d="M4.14023 10.71C3.91172 10.03 3.78516 9.29953 3.78516 8.54531C3.78516 7.79109 3.91172 7.06062 4.14023 6.38062V4.04883H1.26562C0.460547 5.66367 0 7.52484 0 9.56836C0 11.6119 0.460547 13.473 1.26562 15.0879L4.14023 12.7561V10.71Z" fill="#FBBC05"/>
+                    <path d="M9.14062 2.57344C10.4121 2.57344 11.5617 2.98172 12.4969 3.78234L14.9484 1.33078C13.5016 -0.0345703 11.5 -0.440625 9.14062 -0.440625C5.65312 -0.440625 2.63203 1.77797 1.26562 4.51477L4.14023 6.84656C4.87852 4.71141 6.83906 3.13219 9.14062 3.13219V2.57344Z" fill="#EA4335"/>
+                </svg>
+                Continue with Google
+            </button>
+        </form>
+        
+        <!-- Sign Up Form -->
+        <form class="auth-form hidden" id="signup-form">
+            <div class="form-group">
+                <label for="signup-name" class="form-label">Full Name</label>
+                <input type="text" id="signup-name" class="form-input" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="signup-email" class="form-label">Email Address</label>
+                <input type="email" id="signup-email" class="form-input" placeholder="Enter your email" required>
+            </div>
+            
+            <button type="button" class="btn btn-primary" id="request-signup-otp">Request OTP</button>
+            
+            <div class="form-group hidden" id="signup-otp-group">
+                <label for="signup-otp" class="form-label">Enter OTP</label>
+                <div class="otp-container">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary hidden" id="signup-submit">Create Account</button>
+        </form>
+        
+        <div class="auth-footer">
+            By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        const signinTab = document.getElementById('signin-tab');
+        const signupTab = document.getElementById('signup-tab');
+        const signinForm = document.getElementById('signin-form');
+        const signupForm = document.getElementById('signup-form');
+        
+        signinTab.addEventListener('click', () => {
+            signinTab.classList.add('active');
+            signupTab.classList.remove('active');
+            signinForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+        });
+        
+        signupTab.addEventListener('click', () => {
+            signupTab.classList.add('active');
+            signinTab.classList.remove('active');
+            signupForm.classList.remove('hidden');
+            signinForm.classList.add('hidden');
+        });
+        
+        // OTP request handling
+        document.getElementById('request-signin-otp').addEventListener('click', () => {
+            const email = document.getElementById('signin-email').value;
+            if (email) {
+                document.getElementById('signin-otp-group').classList.remove('hidden');
+                document.getElementById('signin-submit').classList.remove('hidden');
+                document.getElementById('request-signin-otp').classList.add('hidden');
+                // In a real app, you would send the OTP to the user's email here
+            }
+        });
+        
+        document.getElementById('request-signup-otp').addEventListener('click', () => {
+            const email = document.getElementById('signup-email').value;
+            const name = document.getElementById('signup-name').value;
+            if (email && name) {
+                document.getElementById('signup-otp-group').classList.remove('hidden');
+                document.getElementById('signup-submit').classList.remove('hidden');
+                document.getElementById('request-signup-otp').classList.add('hidden');
+                // In a real app, you would send the OTP to the user's email here
+            }
+        });
+        
+        // OTP input auto-focus
+        const otpInputs = document.querySelectorAll('.otp-input');
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && index > 0 && !e.target.value) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+        
+        // Form submission
+        signinForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Handle sign in logic
+            alert('Sign in successful!');
+        });
+        
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Handle sign up logic
+            alert('Account created successfully!');
+        });
+        
+        // Real-time stats animation
+        function animateValue(id, start, end, duration) {
+            let startTimestamp = null;
+            const element = document.getElementById(id);
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.innerHTML = id === 'success-rate' ? `${value}%` : value.toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+        
+        // Initialize stats with random values
+        animateValue('active-users', 0, Math.floor(Math.random() * 5000) + 10000, 2000);
+        animateValue('interviews-today', 0, Math.floor(Math.random() * 2000) + 2000, 2000);
+        animateValue('success-rate', 0, Math.floor(Math.random() * 10) + 88, 2000);
+        
+        // Performance chart
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Average Score',
+                    data: [65, 68, 72, 75, 74, 78, 80, 82, 85, 87, 89, 91],
+                    borderColor: '#6366F1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 50,
+                        max: 100
+                    }
+                }
+            }
+        });
+        
+        // Update chart with random data every 5 seconds (simulating real-time updates)
+        setInterval(() => {
+            const newData = performanceChart.data.datasets[0].data.map(value => {
+                const change = Math.random() * 4 - 2; // Random change between -2 and +2
+                return Math.min(Math.max(value + change, 60), 100);
+            });
+            
+            performanceChart.data.datasets[0].data = newData;
+            performanceChart.update();
+        }, 5000);
+    </script>
+</body>
+</html>
